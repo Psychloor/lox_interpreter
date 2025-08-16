@@ -20,7 +20,7 @@ void GenerateAst::defineAst(const std::filesystem::path& outputDir, const std::s
     file << '\n';
     file << "abstract class " << baseName << " {" << '\n';
 
-    for (const std::string_view type : types)
+    for (auto&& type : types)
     {
         const auto colon = type.find(':');
         const auto className = type.substr(0, colon);
@@ -49,7 +49,9 @@ void GenerateAst::defineType(std::ofstream& file, const std::string& baseName, c
         while (std::getline(ss, field, ','))
         {
             if (field.starts_with(' '))
+            {
                 field = field.substr(1); // Remove the leading space
+            }
             fields.push_back(field);
         }
     }

@@ -5,7 +5,6 @@
 #ifndef LOX_INTERPRETER_SCANNER_HPP
 #define LOX_INTERPRETER_SCANNER_HPP
 
-#include <map>
 #include <string>
 #include <vector>
 
@@ -39,7 +38,7 @@ private:
     void identifier();
 
     void addToken(TokenType type);
-    void addToken(TokenType type, TokenLiteral literal);
+    void addToken(TokenType type, const TokenLiteral& literal);
 
     std::string source_;
     std::vector<Token> tokens_;
@@ -48,8 +47,6 @@ private:
     size_t current_ = 0;
     size_t end_ = 0;
     size_t line_ = 1;
-
-    static std::map<std::string, TokenType> keywords_;
 };
 
 

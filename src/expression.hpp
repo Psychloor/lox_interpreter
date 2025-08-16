@@ -14,7 +14,7 @@ class Expression
 class BinaryExpression : public Expression
 {
 public:
-    BinaryExpression(Expression* left, Expression* right, Token* operator_) :
+    BinaryExpression(Expression* left, Token* operator_, Expression* right) :
         left(left), right(right), operator_(operator_)
     {};
 

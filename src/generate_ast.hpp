@@ -16,7 +16,7 @@ class GenerateAst
 
     private:
     static void defineAst(const std::filesystem::path& outputDir, const std::string& baseName, const std::vector<std::string>& types);
-    static void defineType(std::ofstream& file, std::string_view baseName, std::string_view className, std::string_view fieldList);
+    static void defineType(std::ofstream& file, const std::string& baseName, const std::string& className, const std::string& fieldList);
 };
 
 

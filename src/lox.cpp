@@ -2,13 +2,13 @@
 // Created by blomq on 2025-08-16.
 //
 
-#include "lox_interpeter/lox.hpp"
+#include "lox.hpp"
 
 #include <filesystem>
 #include <fstream>
 #include <iostream>
 
-#include "lox_interpeter/scanner.hpp"
+#include "scanner.hpp"
 
 void Lox::runFile(const std::string& path)
 {
@@ -74,8 +74,7 @@ void Lox::report(const size_t line, const std::string& where, const std::string&
 void Lox::run([[maybe_unused]] const std::string& source)
 {
     Scanner scanner(source);
-    const auto tokens = scanner.scanTokens();
+    [[maybe_unused]] const auto tokens = scanner.scanTokens();
 
-    for (auto&& token : tokens)
-    {}
+
 }

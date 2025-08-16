@@ -6,6 +6,28 @@
 
 #include "lox.hpp"
 
+namespace
+{
+    const std::map<std::string, TokenType> KEYWORDS = {
+        {"and", TokenType::And},
+        {"class", TokenType::Class},
+        {"else", TokenType::Else},
+        {"false", TokenType::False},
+        {"for", TokenType::For},
+        {"fun", TokenType::Fun},
+        {"if", TokenType::If},
+        {"nil", TokenType::Nil},
+        {"or", TokenType::Or},
+        {"print", TokenType::Print},
+        {"return", TokenType::Return},
+        {"super", TokenType::Super},
+        {"this", TokenType::This},
+        {"true", TokenType::True},
+        {"var", TokenType::Var},
+        {"while", TokenType::While}
+    };
+}
+
 std::vector<Token> Scanner::scanTokens()
 {
     while (!isAtEnd())
@@ -18,7 +40,7 @@ std::vector<Token> Scanner::scanTokens()
     return tokens_;
 }
 
-void Scanner::scanToken()
+void Scanner::scanToken() // NOLINT(*-function-cognitive-complexity)
 {
     const char c = advance();
     switch (c)
@@ -69,7 +91,9 @@ void Scanner::scanToken()
         if (match('/'))
         {
             while (peek() != '\n' && !isAtEnd())
+            {
                 advance();
+            }
         }
         else if (match('*'))
         {
@@ -82,7 +106,9 @@ void Scanner::scanToken()
                     break;
                 }
                 if (peek() == '\n')
+                {
                     ++line_;
+                }
                 advance();
             }
         }
@@ -105,7 +131,7 @@ void Scanner::scanToken()
         break;
 
     default:
-        if (std::isdigit(c))
+        if (std::isdigit(c) != 0)
         {
             number();
         }
@@ -149,9 +175,13 @@ char Scanner::advance()
 bool Scanner::match(const char expected)
 {
     if (isAtEnd())
+    {
         return false;
+    }
     if (source_[current_] != expected)
+    {
         return false;
+    }
 
     current_++;
     return true;
@@ -160,14 +190,18 @@ bool Scanner::match(const char expected)
 char Scanner::peek() const
 {
     if (isAtEnd())
+    {
         return '\0';
+    }
     return source_[current_];
 }
 
 char Scanner::peekNext() const
 {
     if (current_ + 1 >= end_)
+    {
         return '\0';
+    }
     return source_[current_ + 1];
 }
 
@@ -176,7 +210,9 @@ void Scanner::string()
     while (peek() != '"' && !isAtEnd())
     {
         if (peek() == '\n')
-            line_++;
+        {
+            ++line_;
+        }
         advance();
     }
     if (isAtEnd())
@@ -188,21 +224,26 @@ void Scanner::string()
     advance();
 
     // Trim the surrounding quotes.
-    const std::string value(source_.begin() + start_ + 1, source_.begin() + current_ - 1);
+    const std::string value(source_.begin() + static_cast<std::ptrdiff_t>(start_) + 1,
+                            source_.begin() + static_cast<std::ptrdiff_t>(current_) - 1);
     addToken(TokenType::String, TokenLiteral(value));
 }
 
 void Scanner::number()
 {
-    while (std::isdigit(peek()))
+    while (std::isdigit(peek()) != 0)
+    {
         advance();
+    }
 
     if (peek() == '.' && isDigit(peekNext()))
     {
         advance();
 
-        while (std::isdigit(peek()))
+        while (std::isdigit(peek()) != 0)
+        {
             advance();
+        }
     }
 
     addToken(TokenType::Number, TokenLiteral(std::stod(source_.substr(start_, current_ - start_))));
@@ -211,12 +252,14 @@ void Scanner::number()
 void Scanner::identifier()
 {
     while (isAlphaNumeric(peek()))
+    {
         advance();
+    }
 
     const std::string text = source_.substr(start_, current_ - start_);
-    if (keywords_.contains(text))
+    if (KEYWORDS.contains(text))
     {
-        addToken(keywords_[text]);
+        addToken(KEYWORDS.at(text));
         return;
     }
 
@@ -228,27 +271,8 @@ void Scanner::addToken(const TokenType type)
     addToken(type, TokenLiteral(nullptr));
 }
 
-void Scanner::addToken(TokenType type, TokenLiteral literal)
+void Scanner::addToken(TokenType type, const TokenLiteral& literal)
 {
-    std::string text = source_.substr(start_, current_ - start_);
+    std::string const text = source_.substr(start_, current_ - start_);
     tokens_.emplace_back(type, text, literal, line_);
 }
-
-std::map<std::string, TokenType> Scanner::keywords_ = {
-    {"and", TokenType::And},
-    {"class", TokenType::Class},
-    {"else", TokenType::Else},
-    {"false", TokenType::False},
-    {"for", TokenType::For},
-    {"fun", TokenType::Fun},
-    {"if", TokenType::If},
-    {"nil", TokenType::Nil},
-    {"or", TokenType::Or},
-    {"print", TokenType::Print},
-    {"return", TokenType::Return},
-    {"super", TokenType::Super},
-    {"this", TokenType::This},
-    {"true", TokenType::True},
-    {"var", TokenType::Var},
-    {"while", TokenType::While}
-};
