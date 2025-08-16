@@ -9,15 +9,14 @@ struct Token;
 
 class Expression
 {
-public:
-
 };
 
 class BinaryExpression : public Expression
 {
 public:
     BinaryExpression(Expression* left, Expression* right, Token* operator_) :
-        left(left), right(right), operator_(operator_) {};
+        left(left), right(right), operator_(operator_)
+    {};
 
 private:
     Expression* left;

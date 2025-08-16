@@ -8,13 +8,14 @@
 #include <format>
 #include <optional>
 #include <string>
+#include <utility>
 #include <variant>
 
 #include "token_type.hpp"
 
 namespace lox::token_type
 {
-    enum class TokenType;
+    enum class TokenType : uint8_t;
 }
 
 using namespace lox::token_type;
@@ -27,28 +28,23 @@ private:
 public:
     TokenLiteral() :
         value_(nullptr)
-    {
-    }
+    {}
 
     explicit TokenLiteral(const double value) :
         value_(value)
-    {
-    }
+    {}
 
     explicit TokenLiteral(const std::string& value) :
         value_(value)
-    {
-    }
+    {}
 
     explicit TokenLiteral(const bool value) :
         value_(value)
-    {
-    }
+    {}
 
     explicit TokenLiteral(const std::nullptr_t value) :
         value_(value)
-    {
-    }
+    {}
 
 
     template <typename T>
@@ -92,10 +88,9 @@ struct Token
     TokenLiteral literal;
     size_t line;
 
-    Token(const TokenType type, const std::string_view lexeme, const TokenLiteral& literal, const size_t line) :
-        type(type), lexeme(lexeme), literal(literal), line(line)
-    {
-    }
+    Token(const TokenType type, const std::string_view lexeme, TokenLiteral literal, const size_t line) :
+        type(type), lexeme(lexeme), literal(std::move(literal)), line(line)
+    {}
 
     std::string toString()
     {

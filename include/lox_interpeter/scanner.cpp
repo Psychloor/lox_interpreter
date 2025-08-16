@@ -212,7 +212,7 @@ void Scanner::identifier()
 {
     while (isAlphaNumeric(peek()))
         advance();
-    
+
     const std::string text = source_.substr(start_, current_ - start_);
     if (keywords_.contains(text))
     {

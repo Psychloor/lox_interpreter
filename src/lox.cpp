@@ -77,7 +77,5 @@ void Lox::run([[maybe_unused]] const std::string& source)
     const auto tokens = scanner.scanTokens();
 
     for (auto&& token : tokens)
-    {
-
-    }
+    {}
 }

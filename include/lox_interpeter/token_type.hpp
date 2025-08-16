@@ -7,7 +7,7 @@
 
 namespace lox::token_type
 {
-    enum class TokenType
+    enum class TokenType : uint8_t
     {
         // Single-character tokens.
         LeftParen, RightParen, LeftBrace, RightBrace,

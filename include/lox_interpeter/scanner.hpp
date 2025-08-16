@@ -4,6 +4,7 @@
 
 #ifndef LOX_INTERPRETER_SCANNER_HPP
 #define LOX_INTERPRETER_SCANNER_HPP
+
 #include <map>
 #include <string>
 #include <vector>
@@ -15,27 +16,23 @@ class Scanner
 {
 public:
     explicit Scanner(const std::string& source) :
-        source_(source)
-    {
-        start_ = 0;
-        current_ = 0;
-        end_ = source.size();
-    };
+        source_(source), end_(source.size())
+    {};
 
     std::vector<Token> scanTokens();
 
 private:
     void scanToken();
 
-    bool isAtEnd() const;
+    [[nodiscard]] bool isAtEnd() const;
     static bool isDigit(char c);
     static bool isAlpha(char c);
     static bool isAlphaNumeric(char c);
 
     char advance();
     bool match(char expected);
-    char peek() const;
-    char peekNext() const;
+    [[nodiscard]] char peek() const;
+    [[nodiscard]] char peekNext() const;
 
     void string();
     void number();
